@@ -147,7 +147,13 @@ def musicControls(rootLayout):
             bg="#1c1c1c",                                                                        # setting background color
             fg="#ffffff",                                                                        # setting text color
             border=0)                                                                            # removing border
-    .grid(row=0, column=1, padx=20))                                                             # placing the button
+     .grid(row=0, column=1, padx=20))                                                             # placing the button
+
+    (Button(buttonFrame,
+            image=prevImage,
+            bg="#1c1c1c",
+            border=0)
+     .grid(row=0, column=4, padx=20))                                                               # Placing the stop button
 
     # creating a play button with a larger, round shape and a border
     playButton = Button(buttonFrame,
@@ -174,6 +180,12 @@ def musicControls(rootLayout):
             bg="#1c1c1c",
             border=0)
     .grid(row=0, column=4, padx=20))                                                             # Placing the stop button
+
+    rootLayout.repeatImage = repeatImage                                                       # Assigning seek bar to object
+    rootLayout.stopImage = stopImage
+    rootLayout.prevImage = prevImage
+    rootLayout.nextImage = nextImage
+    rootLayout.playImage = playImage
 
 
 
