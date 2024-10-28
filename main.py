@@ -186,8 +186,7 @@ def musicControls(rootLayout):
     rootLayout.prevImage = prevImage
     rootLayout.nextImage = nextImage
     rootLayout.playImage = playImage
-
-
+    welcomeBox()
 
 def welcomeBox():
     welcomeBox    = tkinter.Toplevel()                                      # Creating a welcome box
@@ -203,6 +202,23 @@ def welcomeBox():
     welcomeBox.overrideredirect(True)                                       # Hiding windows borders
     welcomeBox.resizable(False, False)                                      # Disabling window resize
     welcomeBox.attributes('-alpha', 1.0)                                    # Setting Transparency
+
+    spotifyLogo = Image.open("images/spotifyLogo.ico")
+    resizedLogo = spotifyLogo.resize((50, 50))
+    logo = ImageTk.PhotoImage(resizedLogo)
+    spotifyLabel = Label(welcomeBox,
+                         image=logo,
+                         bg="#000000")
+    spotifyLabel.image = logo
+    spotifyLabel.pack(side=LEFT, anchor=N, padx=170, pady=50)
+
+    spotifyLabel2 = Label(welcomeBox,
+                          text="Spotify",
+                          font=("Arial", 20),
+                          bg="#000000",
+                          fg="#ffffff")
+    spotifyLabel2.place(x=220, y=50)
+
 
 Spotify()                                                                   # Calling Spotify Function
 mainloop()                                                                  # Running mainloop
