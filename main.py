@@ -214,10 +214,25 @@ def welcomeBox():
 
     spotifyLabel2 = Label(welcomeBox,
                           text="Spotify",
-                          font=("Arial", 20),
+                          font=("Circular std", 20),
                           bg="#000000",
                           fg="#ffffff")
-    spotifyLabel2.place(x=220, y=50)
+    spotifyLabel2.place(x=220, y=60)                                       #Placing the label
+
+    MillionsLabel = Label(welcomeBox,
+                          text= "Milliions Of Songs",
+                          font=("Helvetica", 30),                            #Setting The Text
+                          bg="#000000",
+                          fg="#ffffff")
+    MillionsLabel.place(x=80, y=150)                                         #Placing the label
+
+    Free = Label(welcomeBox,
+                  text="Free For All Devices",
+                  font=("Helvetica", 20),
+                  bg="#000000",
+                  fg="#ffffff")
+    Free.place(x=120, y=220)                                                 #Placing the label
+
 
 
 Spotify()                                                                   # Calling Spotify Function
