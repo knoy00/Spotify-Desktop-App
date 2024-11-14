@@ -1,239 +1,431 @@
-from tkinter import *                                                       # Importing Tkinter
-import tkinter.messagebox                                                   # Importing MessageBox function
-from PIL import ImageTk, Image                                              # Importing Image & Pillow for image manipulation
+from tkinter import *                                       # Importing Tkinter
+import tkinter.messagebox                                   # Importing Messsagebox function
+from PIL import ImageTk, Image                              # Importing Image & Pillow for image manipulation
 
 
 
-def Spotify():                                                              # Defining Spotify Function
-    rootLayout = Tk()
-    rootLayout.title("Spotify")                                             # Creating a root Layout
-    rootLayout.geometry("{0}x{1}+0+0".format(rootLayout.winfo_screenwidth(), rootLayout.winfo_screenheight()))              # Creating
-    rootLayout.overrideredirect(False)                                      # Showing windows borders Initially
-    rootLayout.attributes("-fullscreen", True)                              # Setting fullscreen mode
-    rootLayout.config(bg="#2f2f2f")                                         # Setting background color
-    rootLayout.attributes("-alpha", 0.95)                                   # Setting Transparency
-    rootLayout.iconbitmap("images/spotifyLogo.ico")
+def Spotify():                                              # Defining Spotify function
+    rootLayout = Tk()                                       # Creating a root layout
+    rootLayout.title("Spotify")                             # Giving title to the root layout
+    rootLayout.geometry("{0}x{1}+0+0".format(rootLayout.winfo_screenwidth(), rootLayout.winfo_screenheight()))
+    rootLayout.overrideredirect(False)                      # Showing windows borders Initially
+    rootLayout.attributes("-fullscreen", True)              # Setting fullscreen mode
+    rootLayout.config(bg="#2F2F2F")                         # Setting background color
+    rootLayout.attributes('-alpha', 0.95)                   # Setting transparency
+    rootLayout.iconbitmap('images/spotifyLogo.ico')         # Setting icon
 
-    controlBox = Frame(rootLayout,                                          # Creating a control box
-                       height=50,                                           # Setting height
-                       relief="solid",                                      # Setting border style
-                       highlightthickness=1,                                # Setting border thickness
-                       background="#000000",                                # Setting background color
-                       highlightbackground="#2F2F2F")                       # Setting border color
-    controlBox.pack(side=TOP, anchor=NE, fill="x")                          # Placing the control box
+    # Variable to track maximize state
+    is_maximized = [True]                 # Using a list to make it mutable in nested function
+
+    # ------------------------ All Windows Functions ------------------------ #
+    def closeApplication():                                 # Defining closeApplication function
+        MessageBox = tkinter.messagebox.askquestion("EXIT",                               # Title
+                                                    "Are you sure you want to exit?", # Message
+                                                    icon="warning")                            # Icon
+        if MessageBox == "yes":                             # If Yes
+            rootLayout.destroy()                            # Destroying the root layout
+
+    def minimizeApplication():                              # Defining minimizeApplication function
+        rootLayout.iconify()
+
+    def maximizeApplication():
+        if is_maximized[0]:
+            rootLayout.attributes("-fullscreen", False)         # Exit fullscreen
+            rootLayout.update_idletasks()                       # Update window info to get screen dimensions
+            screen_width = rootLayout.winfo_screenwidth()       # Get screen width
+            screen_height = rootLayout.winfo_screenheight()     # Get screen height
+            new_width = int(screen_width * 0.9)                 # 90% of screen width
+            new_height = int(screen_height * 0.9)               # 90% of screen height
+            x_position = (screen_width - new_width) // 2        # Calculate x position to center
+            y_position = (screen_height - new_height) // 2      # Calculate y position to center
+            rootLayout.geometry(f"{new_width}x{new_height}+{x_position}+{y_position}")
+            rootLayout.after(10, lambda: rootLayout.geometry(f"{new_width}x{new_height}+{x_position}+{y_position}"))
+
+        else:
+            rootLayout.attributes("-fullscreen", True)          # Set fullscreen mode
+        is_maximized[0] = not is_maximized[0]                   # Toggle state
+
+    def buttonHover(button, colorOnHover, colorOnLeave):                           # Defining buttonHover function
+        button.bind("<Enter>", func=lambda e: button.config(                       # Hovering the button
+            background=colorOnHover                                                # Setting background color
+        ))
+        button.bind("<Leave>", func=lambda e: button.config(                       # Leaving the button
+            background=colorOnLeave                                                # Setting background color
+        ))
+
+    controlBox = Frame(rootLayout,                          # Creating a control box
+                       height=50,                           # Setting height
+                       relief="solid",                      # Setting border style
+                       highlightthickness=1,                # Setting border thickness
+                       background="#222222",                # Setting background color
+                       highlightbackground="#2F2F2F")       # Setting border color
+    controlBox.pack(side=TOP, anchor=NE, fill="x")          # Placing the control box
+
+    #------ Inserting Control Box Images ------ #
+    closeImage     = Image.open("images/close.png").resize((25, 25))            # Resizing Original Image
+    newClose       = ImageTk.PhotoImage(closeImage)        # Assigning Image to object
+
+    maximizeImage  = Image.open("images/maximize.png")      # Opening maximize image
+    resizeMaximize = maximizeImage.resize((25, 25))         # Resizing Original Image
+    newMaximize    = ImageTk.PhotoImage(resizeMaximize)     # Assigning Image to object
+
+    minimizeImage  = Image.open("images/minimize2.png")      # Opening minimize image
+    resizeMinimize = minimizeImage.resize((25, 25))         # Resizing Original Image
+    newMinimize    = ImageTk.PhotoImage(resizeMinimize)     # Assigning Image to object
+
+    appLogo        = Image.open("images/spotifyLogo.ico")   # Opening logo image
+    resizeLogo     = appLogo.resize((25, 25))               # Resizing Original Image
+    newLogo        = ImageTk.PhotoImage(resizeLogo)         # Assigning Image to object
 
 
-    #---------- Inserting control box Images ------------#
-    closeImage          = Image.open("images/close.png")                    # Opening Close Image
-    resizeClose         = closeImage.resize((30, 30))                       # Resizing Original Image
-    newClose            = ImageTk.PhotoImage(resizeClose)                   # Assigning Image to Object
+    # ------ Creating Control Box Buttons ------ #
+    closeButton    = Button(controlBox,                      # Creating close button
+                            bg="#222222",                    # Setting background color
+                            width=50,                        # Setting width
+                            height=50,                       # Setting height
+                            image=newClose,                  # Setting image
+                            border=0,                        # Removing border
+                            command=closeApplication)                      # Assigning Function to button
+    closeButton.image = newClose                             # Assigning Image to object
+    closeButton.pack(side=RIGHT)                             # Placing the button
+    buttonHover(closeButton, "#ff0000", "#222222")
 
-    maximizeImage       = Image.open("images/maximize.png")                 # Opening maximize image
-    resizeMazimixe      = maximizeImage.resize((30, 30))                    # Resizing Original Image
-    newMaximize         = ImageTk.PhotoImage(resizeMazimixe)                # Assigning Image to object
+    maximizeButton = Button(controlBox,                      # Creating maximize button
+                            bg="#222222",                    # Setting background color
+                            width=50,                        # Setting width
+                            height=50,                       # Setting height
+                            image=newMaximize,               # Setting image
+                            border=0,                        # Removing border
+                            command=maximizeApplication)                      # Assigning Function to butto
+    maximizeButton.image = newMaximize                       # Assigning Image to object
+    maximizeButton.pack(side=RIGHT)                          # Placing the button
+    buttonHover(maximizeButton, "#1ED760", "#222222")
 
-    minimizeImage       = Image.open("images/minimize2.png")                # Opening minimize image
-    resizeMinimize      = minimizeImage.resize((30, 30))                    # Resizing Original Image
-    newMinimize         = ImageTk.PhotoImage(resizeMinimize)                # Assigning Image to object
 
-    appLogo             = Image.open("images/spotifyLogo.ico")              # Opening Logo Images
-    resizeLogo          = appLogo.resize((30, 30))                          # Resizing Original Image
-    newLogo             = ImageTk.PhotoImage(resizeLogo)                    # Assigning Image to object
+    minimizeButton = Button(controlBox,                      # Creating minimize button
+                            bg="#222222",                    # Setting background color
+                            width=50,                        # Setting width
+                            height=50,                       # Setting height
+                            image=newMinimize,               # Setting image
+                            border=0,                        # Removing border
+                            command=minimizeApplication)                      # Assigning Function to button
+    minimizeButton.image = newMinimize                       # Assigning Image to object
+    minimizeButton.pack(side=RIGHT)                          # Placing the button
+    buttonHover(minimizeButton, "#1ED760", "#222222")
 
-    # ----------- Creating Control Box Button -------- #
-    closeButton = Button(controlBox,                                        # Creating close button
-                         bg="#000000",                                      # Setting background color
-                         width=50,                                          # Seting width
-                         height=50,                                         # Seting height
-                         image=newClose,                                    # Setting Image
-                         border=0,                                          # Removing border
-                         command="",                                        # Assigning Image to object
-                         cursor="Hand2")                                    # Setting Curso
-    closeButton.image = newClose                                            # Assigning Image to object
-    closeButton.pack(side=RIGHT)                                            # Placing the close button
+    appLogoButton = Button(controlBox,                       # Creating minimize button
+                            bg="#222222",                    # Setting background color
+                            width=50,                        # Setting width
+                            height=50,                       # Setting height
+                            image=newLogo,                   # Setting image
+                            border=0,                        # Removing border
+                            command="")                      # Assigning Function to button
+    appLogoButton.image = newLogo                            # Assigning Image to object
+    appLogoButton.pack(side=LEFT)                            # Placing the button
+    imageGrid(rootLayout)                                    # Calling ImageGrid function
 
-    maximizeButton = Button(controlBox,
-                            bg="#000000",
-                            width=50,
-                            height=50,
-                            image=newMaximize,
-                            border=0,
-                            command="",
-                            cursor="Hand2")
-    maximizeButton.image = newMaximize                                      # Assigning Image to object
-    maximizeButton.pack(side=RIGHT)                                         # Placing the maximize button
 
-    minimizeButton = Button(controlBox,
-                            bg="#000000",
-                            width=50,
-                            height=50,
-                            image=newMinimize,
-                            border=0,
-                            command="",
-                            cursor="Hand2")
-    minimizeButton.image = newMinimize
-    minimizeButton.pack(side=RIGHT)                                        # Placing the minimize button
+def imageGrid(rootLayout):                                   # Defining imageGrid function
+    imageFrame =Frame(rootLayout,                            # Creating  image frame
+                     bg="#2F2F2F")                           # Setting background color
+    imageFrame.place(relx=0.06, rely=0.18, relwidth=0.9, relheight=0.75) # Placing image frame to occupy 90
 
-    logoButton = Button(controlBox,
-                              bg="#000000",
-                              width=50,
-                              height=50,
-                              image=newLogo,
-                              border=0,
-                              command="",
-                              cursor="hand2")
-    logoButton.image = newLogo
-    logoButton.pack(side=LEFT)                                                  # Placing the logo button
+    images = []                                                                 # Loading & arranging 12 images
+    for i in range(12):                                                         # Looping 12 times
+        img = Image.open(f"images/image{i+1}.png").resize((250, 250))           # Opening images
+        images.append(ImageTk.PhotoImage(img))                                  # Assigning Image to object
 
-    imageGrid(rootLayout)                                                       # Calling ImageGrid function
-def imageGrid(rootLayout):                                                  # Defining imageGrid function
-    imageFrame = Frame(rootLayout,                                          # Creating image frame
-                        bg='#2F2F2F')                                        # Setting background colour
-    imageFrame.place(relx=0.06, rely=0.18, relwidth=0.9, relheight=0.75)    # Placing image frame to occupy 90
-
-    images = []                                                             # Loading & arranging 12 images
-    for i in range(12):                                                     # Looping 12 times
-        img = Image.open(f"images/image{i + 1}.png").resize((250, 250))     # Opening images
-        images.append(ImageTk.PhotoImage(img))                              # Assigning Image ot object
-
-    for i in range(6):                                                      # Placing images 6 at the top
+    for i in range(6):                                                          # Placing images 6 at the top
         (Label(imageFrame, image=images[i],
-                bg="#2F2F2F")
-            .grid(row=0, column=i, padx=10, pady=10))
+              bg="#2F2F2F")
+         .grid(row=0, column=i, padx=10, pady=10))
 
-    for i in range(6, 12):                                                  # Placing images at the top
+    for i in range(6, 12):                                                      # Placing images 6 at the bottom
         (Label(imageFrame, image=images[i],
-                bg="#2F2F2F")
-            .grid(row=1, column=i - 6, padx=10, pady=10))
+              bg="#2F2F2F")
+         .grid(row=1, column=i-6, padx=10, pady=10))
 
-    rootLayout.images = images
-    musicControls(rootLayout)
+    rootLayout.images = images                                                 # Assigning Image to object
+    musicControls(rootLayout)                                                  # Calling musicControls function
 
 def musicControls(rootLayout):
-
-    controlFrame = Frame(rootLayout, bg="#1c1c1c", height=100)               # Creating control frame
-    controlFrame.pack(fill=X, side=BOTTOM)                                   # Placing control frame
-
-
-    buttonFrame = Frame(controlFrame, bg="#1c1c1c")                          # Placing button frame
-    buttonFrame.pack(pady=10, side=TOP)                                     # Placing button frame in control frame
-
-    seekBarWidth = int(rootLayout.winfo_screenwidth() * 0.8)  # Corrected width of seek bar
+    #
+    controlFrame = Frame(rootLayout, bg="#1C1C1C", height=100)                 # Creating control frame
+    controlFrame.pack(side=BOTTOM, fill="x")                                   # Placing the frame
 
 
-    # Adding a seekbar (scale) at the bottom, designed to look like a music seek bar
-    seekBar = Scale(controlFrame, from_=0, to=100,
-                    orient=HORIZONTAL,
-                    bg="#1c1c1c",
-                    fg="#ffffff",
-                    length=seekBarWidth,
-                    troughcolor="#444444",
-                    sliderlength=15,
-                    highlightthickness=0,
-                    showvalue=0,
-                    bd=0,
-                    tickinterval=0, width=8)
-    seekBar.pack(side=BOTTOM, pady=10)                                         # Placing seek bar in control frame
+    buttonFrame = Frame(controlFrame, bg="#1C1C1C")                           # Create a frame to hold the buttons
+    buttonFrame.pack(side=TOP, pady=10)                                       # Placing the frame
 
-    repeatImage = ImageTk.PhotoImage(Image.open("images/repeat.png").resize((25, 25)))       # Opening repeat image
-    prevImage   = ImageTk.PhotoImage(Image.open("images/previous.png").resize((25, 25)))         # Opening prev image
-    playImage   = ImageTk.PhotoImage(Image.open("images/play.png").resize((25, 25)))             # Opening play image
-    stopImage   = ImageTk.PhotoImage(Image.open("images/stop.png").resize((25, 25)))             # Opening stop image
-    nextImage   = ImageTk.PhotoImage(Image.open("images/next.png").resize((25, 25)))           # Opening next image
 
-    # creating repeat, previous, play, (with larger size and round shape), next, stop buttons
-    (Button(buttonFrame,                                                                         # Creating repeat button
-            image=repeatImage,                                                                   # assigning image
-            bg="#1c1c1c",                                                                        # setting background color
-            fg="#ffffff",                                                                        # setting text color
-            border=0)                                                                            # removing border
-     .grid(row=0, column=1, padx=20))                                                             # placing the button
+    seekBarWidth = int(rootLayout.winfo_screenwidth() * 0.8)                  # Create a frame to hold the seek bar
 
-    (Button(buttonFrame,
-            image=prevImage,
-            bg="#1c1c1c",
-            border=0)
-     .grid(row=0, column=4, padx=20))                                                               # Placing the stop button
+    # Adding a seek bar (scale) at the bottom, designed to look like a music seek bar
+    seekBar = Scale(controlFrame, from_=0, to=100,                           # Creating seek bar
+                    orient=HORIZONTAL,                                       # Orienting it horizontally
+                    bg="#1C1C1C",                                            # Setting background color
+                    fg="white",                                              # Setting foreground color
+                    length=seekBarWidth,                                     # Setting length
+                    troughcolor="#444444",                                   # Setting trough color
+                    sliderlength=15,                                         # Setting slider length
+                    highlightthickness=0,                                    # Setting highlight thickness
+                    showvalue=0,                                             # Setting show value
+                    bd=0,                                                    # Setting border
+                    tickinterval=0, width=8)                                 # Setting tick interval
+    seekBar.pack(side=BOTTOM, pady=10)                                       # Placing the seek bar
 
-    # creating a play button with a larger, round shape and a border
-    playButton = Button(buttonFrame,
-                        image=playImage,
-                        bg="#1c1c1c",
-                        borderwidth=3,
-                        relief="solid",
-                        width=60,
-                        height=60,
-                        highlightbackground="white",
-                        highlightthickness=2,                                                     # Removing highlight
-                        activebackground="#1c1c1c",
-                        activeforeground="#ffffff")
-    playButton.grid(row=0, column=2, padx=20)                                                     # Placing the play button
+    # Load images for buttons
+    repeatImage = ImageTk.PhotoImage(Image.open("images/repeat.png").resize((25, 25)))      # Create a repeat image
+    prevImage   = ImageTk.PhotoImage(Image.open("images/previous.png").resize((25, 25)))    # Create a previous image
+    playImage   = ImageTk.PhotoImage(Image.open("images/play.png").resize((35, 35)))        # Create a play image
+    stopImage   = ImageTk.PhotoImage(Image.open("images/stop.png").resize((25, 25)))        # Create a stop image
+    nextImage   = ImageTk.PhotoImage(Image.open("images/next.png").resize((25, 25)))        # Create a next image
 
-    (Button(buttonFrame,
-            image=nextImage,
-            bg="#1c1c1c",
-            border=0)
-    .grid(row=0, column=3, padx=20))                                                             # Placing the next button
+    # Create Repeat, Previous, Play (with larger size and round shape), Next, Stop buttons
+    (Button(buttonFrame,                                                     # Creating buttons
+           image=repeatImage,                                                # Assigning image
+           bg="#1C1C1C",                                                     # Setting background color
+           border=0)                                                         # Removing border
+     .grid(row=0, column=0, padx=20))                                        # Placing the button
 
-    (Button(buttonFrame,
-            image=stopImage,
-            bg="#1c1c1c",
-            border=0)
-    .grid(row=0, column=4, padx=20))                                                             # Placing the stop button
+    (Button(buttonFrame,                                                     # Creating buttons
+           image=prevImage,                                                  # Assigning image
+           bg="#1C1C1C",                                                     # Setting background color
+           border=0)                                                         # Removing border
+    .grid(row=0, column=1, padx=20))                                         # Placing the button
 
-    rootLayout.repeatImage = repeatImage                                                       # Assigning seek bar to object
-    rootLayout.stopImage = stopImage
-    rootLayout.prevImage = prevImage
-    rootLayout.nextImage = nextImage
+    # Create a Play button with a larger, round shape, and a border
+    playButton = Button(buttonFrame,                                         # Creating buttons
+                        image=playImage,                                     # Assigning image
+                        bg="#1C1C1C",                                        # Setting background color
+                        borderwidth=3,                                       # Setting border
+                        relief="solid",                                      # Setting border style
+                        width=60,                                            # Setting width
+                        height=60,                                           # Setting height
+                        highlightbackground="white",                         # Setting border color
+                        highlightthickness=2,                                # Setting border thickness
+                        highlightcolor="white",                              # Setting border color
+                        activebackground="#1C1C1C",                          # Setting active background color
+                        activeforeground="white")                            # Setting active foreground color
+    playButton.grid(row=0, column=2, padx=20)                                # Placing the button
+
+    (Button(buttonFrame,  # Creating buttons
+            image=prevImage,  # Assigning image
+            bg="#1C1C1C",  # Setting background color
+            border=0)  # Removing border
+     .grid(row=0, column=3, padx=20))  # Placing the button
+
+    (Button(buttonFrame,                                                     # Creating buttons
+           image=nextImage,                                                  # Assigning image
+           bg="#1C1C1C",                                                     # Setting background color
+           border=0)                                                         # Removing border
+     .grid(row=0, column=3, padx=20))                                        # Placing the button
+
+    (Button(buttonFrame,                                                     # Creating buttons
+           image=stopImage,                                                  # Assigning image
+           bg="#1C1C1C",                                                     # Setting background color
+           border=0)                                                         # Removing border
+     .grid(row=0, column=4, padx=20))                                        # Placing the button
+
+    # Keep references to images
+    rootLayout.repeatImage = repeatImage
     rootLayout.playImage = playImage
+    rootLayout.stopImage = stopImage
+    rootLayout.nextImage = nextImage
+    rootLayout.prevImage = prevImage
+
+
     welcomeBox()
+def welcomeBox():                                            # Defining welcomeBox function
+    welcomeBox   = tkinter.Toplevel()                        # Creating a welcome box
+    welcomeBox.title("Welcome")                              # Giving title to the welcome box
+    box_width  = 500                                         # Setting width
+    box_height = 500                                         # Setting height
+    screen_width  = welcomeBox.winfo_screenwidth()           # Getting screen width
+    screen_height = welcomeBox.winfo_screenheight()          # Getting screen height
+    x = int((screen_width/2)  - (box_width/2))                # Calculating x
+    y = int((screen_height/2) - (box_height/2))              # Calculating y
+    welcomeBox.geometry("{}x{}+{}+{}".format(box_width, box_height, x, y)) # Setting geometry
+    welcomeBox.config(bg="#000000")                          # Setting background color
+    welcomeBox.overrideredirect(True)                        # Hiding windows borders
+    welcomeBox.resizable(False, False)           # Disabling window resizing
+    welcomeBox.attributes('-alpha', 1.0)                     # Setting transparency
 
-def welcomeBox():
-    welcomeBox    = tkinter.Toplevel()                                      # Creating a welcome box
-    welcomeBox.title = "Welcome"                                            # Title for welcome box
-    box_width = 500                                                         # Width of box
-    box_height = 500                                                        # Height of box
-    screen_width = welcomeBox.winfo_screenwidth()                           # Width of screen
-    screen_height = welcomeBox.winfo_screenheight()                         # Height of screen
-    x = int((screen_width)/2 - (box_width/2))                               # Width of x
-    y = int((screen_height)/2 - (box_height/2))                             # Height of y
-    welcomeBox.geometry("{}x{}+{}+{}".format(box_width, box_height, x, y))  # Setting geometry
-    welcomeBox.config(bg="#000000")                                         # Setting background color
-    welcomeBox.overrideredirect(True)                                       # Hiding windows borders
-    welcomeBox.resizable(False, False)                                      # Disabling window resize
-    welcomeBox.attributes('-alpha', 1.0)                                    # Setting Transparency
+    # -------------------------------- All Forms Functions -------------------------------- #
+    def loginFunction(*args):
+        welcomeBox.destroy()                                 # Closing the welcome box
+        loginLayout()                                        # Opening login layout
 
-    spotifyLogo = Image.open("images/spotifyLogo.ico")
-    resizedLogo = spotifyLogo.resize((50, 50))
-    logo = ImageTk.PhotoImage(resizedLogo)
-    spotifyLabel = Label(welcomeBox,
-                         image=logo,
+    def signupFunction(*args):
+        welcomeBox.destroy()                                 # Closing the welcome box
+        signupLayout()                                       # Opening Signup layout
+
+
+    spotifyLogo = Image.open("images/spotifyLogo.ico")       # Opening spotify logo
+    resizedLogo = spotifyLogo.resize((50, 50))               # Resizing spotify logo
+    logo = ImageTk.PhotoImage(resizedLogo)                   # Assigning Image to object
+    spotifyLabel = Label(welcomeBox,                         # Creating a label
+                         image=logo,                         # Assigning image
+                         bg="#000000")                       # Setting background color
+    spotifyLabel.image = logo                                # Assigning image
+    spotifyLabel.pack(side=LEFT, anchor=N, padx=170, pady=50)   # Placing the label
+
+    spotifyLabel2 = Label(welcomeBox,                        # Creating a label
+                          text="Spotify",                    # Setting text
+                          font=("Helvetica", 20),            # Setting font
+                          bg="#000000",                      # Setting background color
+                          fg="white")                        # Setting foreground color
+    spotifyLabel2.place(x=222, y=60)    # Placing the label
+
+    MillionsLabel = Label(welcomeBox,                        # Creating a label
+                         text="Millions Of Songs.",          # Setting text
+                         font=("CircularStd", 30, "bold"),   # Setting font
+                         bg="#000000",                       # Setting background color
+                         fg="white")                         # Setting foreground color
+    MillionsLabel.place(x=80, y=150)                         # Placing the label
+
+    Free = Label(welcomeBox,                                 # Creating a label
+                 text="Free on Spotify",                     # Setting text
+                 font=("CircularStd", 28, "bold"),           # Setting font
+                 bg="#000000",                               # Setting background color
+                 fg="white")                                 # Setting foreground color
+    Free.place(x=115, y=205)                                 # Placing the label
+
+    # Canvas for creating a rounded rectangle
+    loginButton = Canvas(welcomeBox, width=100, height=50, bg="#000000", highlightthickness=0)
+    loginButton.place(x=200, y=280)
+
+    # Draw a rounded rectangle
+    radius = 20
+    x0, y0, x1, y1 = 5, 5, 95, 45
+    loginButton.create_arc(x0, y0, x0 + radius, y0 + radius, start=90, extent=90,  fill="#1ED760", outline="#1ED760")
+    loginButton.create_arc(x1 - radius, y0, x1, y0 + radius, start=0, extent=90,   fill="#1ED760", outline="#1ED760")
+    loginButton.create_arc(x0, y1 - radius, x0 + radius, y1, start=180, extent=90, fill="#1ED760", outline="#1ED760")
+    loginButton.create_arc(x1 - radius, y1 - radius, x1, y1, start=270, extent=90, fill="#1ED760", outline="#1ED760")
+    loginButton.create_rectangle(x0 + radius / 2, y0, x1 - radius / 2, y1, fill="#1ED760", outline="#1ED760")
+    loginButton.create_rectangle(x0, y0 + radius / 2, x1, y1 - radius / 2, fill="#1ED760", outline="#1ED760")
+
+    # Add text or an icon
+    loginButton.create_text(35, 25, text="Login", fill="black", font=("Arial", 10, "bold"))
+    loginButton.bind("<Button-1>", loginFunction)
+
+    # Load and resize the image
+    canvasImage = Image.open("images/share.png")                    # Opening image
+    canvasResized = canvasImage.resize((25, 25))                    # Resizing image to fit button
+    canvasPhoto = ImageTk.PhotoImage(canvasResized)                 # Assigning Image to object
+
+    # Place image on button canvas
+    loginButton.create_image(75, 25, image=canvasPhoto)       # Positioning image in button
+    loginButton.image = canvasPhoto                                 # Keep a reference to prevent garbage collection
+
+    New = Label(welcomeBox,                                         # Creating a label)
+                text="New to Spotify?",                             # Setting text
+                font=("CircularStd", 10, "bold"),                   # Setting font
+                bg="#000000",                                       # Setting background color
+                fg="#999999")                                       # Setting foreground color
+    New.place(x=150, y=350)                                         # Placing the label
+
+    Signup  = Label(welcomeBox,                                     # Creating a label
+                    text="Sign up free",                            # Setting text
+                    font=("CircularStd", 10, "bold"),               # Setting font
+                    bg="#000000",                                   # Setting background color
+                    fg="#ffffff")                                   # Setting foreground color
+    Signup.place(x=255, y=350)                                      # Placing the label
+    Signup.bind("<Button-1>", lambda e: signupFunction())           # Calling the signup function
+
+    sharewhite = Image.open("images/share-white.jpg")               # Opening image
+    sharewhiteResized = sharewhite.resize((20, 20))                 # Resizing image to fit button
+    sharewhitePhoto = ImageTk.PhotoImage(sharewhiteResized)         # Assigning Image to object
+
+    whiteLabel = Label(welcomeBox,                                  # Creating a label
+                        image=sharewhitePhoto,                      # Setting image
+                        bg="#000000")                               # Setting background color
+    whiteLabel.image = sharewhitePhoto                              # Keep a reference to prevent garbage collection
+    whiteLabel.place(x=340, y=350)                                  # Placing the label
+
+    Settings = Label(welcomeBox,                                    # Creating a label
+                    text="Settings",                                # Setting text
+                    font=("CircularStd", 10, "bold", "underline"),  # Setting font
+                    bg="#000000",                                   # Setting background color
+                    fg="#999999")                                   # Setting foreground color
+    Settings.place(x=220, y=400)                                    # Placing the label
+
+
+def loginLayout():
+    signupPage  = Tk()                                               # Creating a root layout
+    signupPage.title("Login")                                        # Giving title to the root layout
+    signup_width = 500                                               # Setting width
+    signup_height = 800                                              # Setting height
+    screen_width = signupPage.winfo_screenwidth()                    # Get screen width
+    screen_height = signupPage.winfo_screenheight()                  # Get screen height
+    x = (screen_width/2) - (signup_width/2)                          # Get x
+    y = (screen_height/2) - (signup_height/2)                        # Get y
+    signupPage.geometry("%dx%d+%d+%d" % (signup_width, signup_height, x, y))  # Setting geometry
+    signupPage.overrideredirect(True)                                # Showing windows borders Initially
+    signupPage.config(bg= "#000000")                                 # Setting background color
+    signupPage.resizable(False, False)                    # Disable resizing
+    signupPage.attributes('-alpha', 1.0)                             # Setting transparency
+
+
+
+def signupLayout():
+    signupPage  = Toplevel()                                              # Creating a root layout
+    signupPage.title("Login")                                        # Giving title to the root layout
+    signup_width = 500                                               # Setting width
+    signup_height = 800                                              # Setting height
+    screen_width = signupPage.winfo_screenwidth()                    # Get screen width
+    screen_height = signupPage.winfo_screenheight()                  # Get screen height
+    x = (screen_width/2) - (signup_width/2)                          # Get x
+    y = (screen_height/2) - (signup_height/2)                        # Get y
+    signupPage.geometry("%dx%d+%d+%d" % (signup_width, signup_height, x, y))  # Setting geometry
+    signupPage.overrideredirect(True)                                # Showing windows borders Initially
+    signupPage.config(bg= "#000000")                                 # Setting background color
+    signupPage.resizable(False, False)                    # Disable resizing
+    signupPage.attributes('-alpha', 1.0)                             # Setting transparency
+
+    whiteLogo = Image.open("images/spotify_white.png")
+    resizedWhite = whiteLogo.resize((50, 50))
+    whiteLogo = ImageTk.PhotoImage(resizedWhite)
+
+    spotifyWhite = Label(signupPage,
+                         image=whiteLogo,
                          bg="#000000")
-    spotifyLabel.image = logo
-    spotifyLabel.pack(side=LEFT, anchor=N, padx=170, pady=50)
+    spotifyWhite.image = whiteLogo
+    spotifyWhite.place(x=10, y=100)
 
-    spotifyLabel2 = Label(welcomeBox,
-                          text="Spotify",
-                          font=("Circular std", 20),
-                          bg="#000000",
-                          fg="#ffffff")
-    spotifyLabel2.place(x=220, y=60)                                       #Placing the label
+    listenLabel = Label(signupPage,
+                        text="Sign Up to",
+                        font= ("Circular", "35", "bold"),
+                        bg="#000000",
+                        fg="#ffffff")
+    listenLabel.place(x=signup_width // 4, y=signup_height // 6)
 
-    MillionsLabel = Label(welcomeBox,
-                          text= "Milliions Of Songs",
-                          font=("Helvetica", 30),                            #Setting The Text
-                          bg="#000000",
-                          fg="#ffffff")
-    MillionsLabel.place(x=80, y=150)                                         #Placing the label
-
-    Free = Label(welcomeBox,
-                  text="Free For All Devices",
-                  font=("Helvetica", 20),
-                  bg="#000000",
-                  fg="#ffffff")
-    Free.place(x=120, y=220)                                                 #Placing the label
+    listenLabel2 = Label(signupPage,
+                         text="Start Loistening",
+                         font= ("Circular", "35", "bold"),
+                         bg="#000000",
+                         fg="#ffffff")
+    listenLabel2.place(x=signup_width // 7, y=signup_height // 4)
 
 
 
-Spotify()                                                                   # Calling Spotify Function
-mainloop()                                                                  # Running mainloop
+    # spotify_path = "images/spotify_white.png"  # Verify this path
+    # try:
+    #     spotify = Image.open(spotify_path)
+    #     spotifyNew = spotify.resize((50, 50))
+    #     newSpotify = ImageTk.PhotoImage(spotifyNew)
+    #
+    #     # Store the image in both the main Tk window and in the label itself
+    #     signupPage.spotify_logo_img = newSpotify
+    #     spotifyLogo = Label(signupPage, image=newSpotify, bg='#000000')
+    #     spotifyLogo.image = newSpotify  # Attach to the label directly
+    #     spotifyLogo.place(x=10, y=100)
+    #
+    # except FileNotFoundError:
+    #     print(f"Error: Image file not found at '{spotify_path}'.")
+
+
+
+Spotify()                                                   # Calling Spotify function
+mainloop()                                                  # Running mainloop
+
