@@ -333,7 +333,7 @@ def welcomeBox():                                            # Defining welcomeB
     Signup.place(x=255, y=350)                                      # Placing the label
     Signup.bind("<Button-1>", lambda e: signupFunction())           # Calling the signup function
 
-    sharewhite = Image.open("images/share-white.jpg")               # Opening image
+    sharewhite = Image.open("images/share-white.png")               # Opening image
     sharewhiteResized = sharewhite.resize((20, 20))                 # Resizing image to fit button
     sharewhitePhoto = ImageTk.PhotoImage(sharewhiteResized)         # Assigning Image to object
 
@@ -379,9 +379,28 @@ def signupLayout():
     y = (screen_height/2) - (signup_height/2)                        # Get y
     signupPage.geometry("%dx%d+%d+%d" % (signup_width, signup_height, x, y))  # Setting geometry
     signupPage.overrideredirect(True)                                # Showing windows borders Initially
-    signupPage.config(bg= "#000000")                                 # Setting background color
-    signupPage.resizable(False, False)                    # Disable resizing
+    signupPage.config(bg= "#000000")                                                    # Setting background color
+    signupPage.resizable(False, False)                                  # Disable resizing
     signupPage.attributes('-alpha', 1.0)                             # Setting transparency
+
+
+    # ------------------------------- All Forms Function -------------------------------- #
+
+    def EmailEntry_Focus():                                                 #Define Email Entry focus function
+        if EmailTextField.get() == "name@domain.com":                       #checking if email entry is empty
+            EmailTextField.delete(0, "end")                                 # deleting the text (placeholder)
+            EmailTextField.config(foreground="white")                       # Setting foreground color
+        else:
+            pass
+
+    def EmailEntry_Focus():                                                 #Define Email Entry focus function
+        if len(EmailTextField.get()) == 0:                       #checking if email entry is empty
+            EmailTextField.insert(0, "name@domain.com")                                # deleting the text (placeholder)
+            EmailTextField.focus()                                                 1# setting foreground color
+            EmailTextField.config(foreground="white")                       # Setting foreground color
+        else:
+            pass
+
 
     whiteLogo = Image.open("images/spotify_white.png")
     resizedWhite = whiteLogo.resize((50, 50))
@@ -391,7 +410,7 @@ def signupLayout():
                          image=whiteLogo,
                          bg="#000000")
     spotifyWhite.image = whiteLogo
-    spotifyWhite.place(x=10, y=100)
+    spotifyWhite.place(x=220, y=70)
 
     listenLabel = Label(signupPage,
                         text="Sign up to",
@@ -410,9 +429,9 @@ def signupLayout():
     emailLabel = Label(signupPage,
                        text= "Email Address",
                        font=("CircularStd", 10, "bold"),
-                       foreground="#ffffff",
+                       foreground="gray",
                        bg= "#000000")
-    emailLabel.place(x=signup_width // 7, y=signup_height // 2.5)
+    emailLabel.place(x=signup_width // 7, y=signup_height // 2.81)
 
     EmailTextField = Entry(signupPage,
                            relief='solid',
@@ -421,14 +440,14 @@ def signupLayout():
                            highlightthickness=1,
                            highlightbackground='gray')
     EmailTextField.insert(0, "name@domain.com")
-    EmailTextField.place(x=signup_width // 7, y=signup_height // 2.3, width=350, height=50)
+    EmailTextField.place(x=signup_width // 7, y=signup_height // 2.6, width=350, height=50)
 
     nameLabel = Label(signupPage,
                        text="Name",
                        font=("CircularStd", 10, "bold"),
-                       foreground="#ffffff",
+                       foreground="gray",
                        bg="#000000")
-    nameLabel.place(x=signup_width // 7, y=signup_height // 1.9)
+    nameLabel.place(x=signup_width // 7, y=signup_height // 2.2)
 
     NameTextField = Entry(signupPage,
                            relief='solid',
@@ -436,8 +455,34 @@ def signupLayout():
                            foreground="#ffffff",
                            highlightthickness=1,
                            highlightbackground='gray')
-    NameTextField.insert(0, "name@domain.com")
-    NameTextField.place(x=signup_width // 7, y=signup_height // 1.8, width=350, height=50)
+    NameTextField.insert(0, "John Doe")
+    NameTextField.place(x=signup_width // 7, y=signup_height // 2.05, width=350, height=50)
+
+    passwordLabel = Label(signupPage,
+                      text="Password",
+                      font=("CircularStd", 10, "bold"),
+                      foreground="gray",
+                      bg="#000000")
+    passwordLabel.place(x=signup_width // 7, y=signup_height // 1.8)
+
+    PasswordTextField = Entry(signupPage,
+                          relief='solid',
+                          background="#000000",
+                          foreground="#ffffff",
+                          highlightthickness=1,
+                          highlightbackground='gray')
+    PasswordTextField.insert(0, "**********")
+    PasswordTextField.place(x=signup_width // 7, y=signup_height // 1.7, width=350, height=50)
+
+    HideEye = Image.open("images/invisible_eye.png")
+    ResizedEye = HideEye.resize((25, 25))
+    NewHideEye = ImageTk.PhotoImage(ResizedEye)
+
+    ShowEye = Image.open("images/visible_eye.png")
+    ResizedShowEye = ShowEye.resize((25, 25))
+    NewShowEye = ImageTk.PhotoImage(ResizedShowEye)
+
+
 
 
 
