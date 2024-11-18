@@ -394,18 +394,52 @@ def signupLayout():
     spotifyWhite.place(x=10, y=100)
 
     listenLabel = Label(signupPage,
-                        text="Sign Up to",
+                        text="Sign up to",
                         font= ("Circular", "35", "bold"),
                         bg="#000000",
                         fg="#ffffff")
     listenLabel.place(x=signup_width // 4, y=signup_height // 6)
 
     listenLabel2 = Label(signupPage,
-                         text="Start Loistening",
+                         text="Start Listening",
                          font= ("Circular", "35", "bold"),
                          bg="#000000",
                          fg="#ffffff")
     listenLabel2.place(x=signup_width // 7, y=signup_height // 4)
+
+    emailLabel = Label(signupPage,
+                       text= "Email Address",
+                       font=("CircularStd", 10, "bold"),
+                       foreground="#ffffff",
+                       bg= "#000000")
+    emailLabel.place(x=signup_width // 7, y=signup_height // 2.5)
+
+    EmailTextField = Entry(signupPage,
+                           relief='solid',
+                           background="#000000",
+                           foreground="#ffffff",
+                           highlightthickness=1,
+                           highlightbackground='gray')
+    EmailTextField.insert(0, "name@domain.com")
+    EmailTextField.place(x=signup_width // 7, y=signup_height // 2.3, width=350, height=50)
+
+    nameLabel = Label(signupPage,
+                       text="Name",
+                       font=("CircularStd", 10, "bold"),
+                       foreground="#ffffff",
+                       bg="#000000")
+    nameLabel.place(x=signup_width // 7, y=signup_height // 1.9)
+
+    NameTextField = Entry(signupPage,
+                           relief='solid',
+                           background="#000000",
+                           foreground="#ffffff",
+                           highlightthickness=1,
+                           highlightbackground='gray')
+    NameTextField.insert(0, "name@domain.com")
+    NameTextField.place(x=signup_width // 7, y=signup_height // 1.8, width=350, height=50)
+
+
 
 
 
