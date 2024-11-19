@@ -1,8 +1,18 @@
 from tkinter import *                                       # Importing Tkinter
 import tkinter.messagebox                                   # Importing Messsagebox function
 from PIL import ImageTk, Image                              # Importing Image & Pillow for image manipulation
+import sqlite3                                              # Importing SQLite
 
+connection = sqlite3.connect("Spotify.db")
+cur        = connection.cursor()
+cur.execute(''' CREATE TABLE IF NOT EXIST users(
+                 UserID     INT PRIMARY KEY AUTOINCREMENT,
+                 Email      TEXT UNIQUE,
+                 Name       TEXT UNIQUE,
+                 Password   TEXT)
+                 ''')
 
+# ---------------------------------------------- Creating Database -------------------------------- #
 
 def Spotify():                                              # Defining Spotify function
     rootLayout = Tk()                                       # Creating a root layout
@@ -396,7 +406,7 @@ def signupLayout():
     def EmailEntry_Focus():                                                 #Define Email Entry focus function
         if len(EmailTextField.get()) == 0:                       #checking if email entry is empty
             EmailTextField.insert(0, "name@domain.com")                                # deleting the text (placeholder)
-            EmailTextField.focus()                                                 1# setting foreground color
+            EmailTextField.focus()                                                 # setting foreground color
             EmailTextField.config(foreground="white")                       # Setting foreground color
         else:
             pass
@@ -481,6 +491,17 @@ def signupLayout():
     ShowEye = Image.open("images/visible_eye.png")
     ResizedShowEye = ShowEye.resize((25, 25))
     NewShowEye = ImageTk.PhotoImage(ResizedShowEye)
+
+    SignupButton = Button(signupPage,
+                          command="",
+                          font=("CircularStd", 10, "bold"),
+                          width=43,
+                          height=3,
+                          border=0,
+                          cursor="hand2",
+                          background="#1ed760",
+                          foreground="white")
+    SignupButton.place(x=signup_width // 7, y=signup_height // 1.4)
 
 
 
