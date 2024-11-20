@@ -5,12 +5,14 @@ import sqlite3                                              # Importing SQLite
 
 connection = sqlite3.connect("Spotify.db")
 cur        = connection.cursor()
-cur.execute(''' CREATE TABLE IF NOT EXIST users(
+cur.execute(''' CREATE TABLE IF NOT EXISTS users(
                  UserID     INT PRIMARY KEY AUTOINCREMENT,
                  Email      TEXT UNIQUE,
                  Name       TEXT UNIQUE,
                  Password   TEXT)
                  ''')
+
+connection.commit()
 
 # ---------------------------------------------- Creating Database -------------------------------- #
 
